@@ -2,6 +2,7 @@
 <img src="https://img.shields.io/github/languages/code-size/svasandani/terrakita" />
 <img src="https://img.shields.io/github/license/svasandani/terrakita" />
 <img src="https://img.shields.io/github/last-commit/svasandani/terrakita" />
+<img src="https://img.shields.io/github/go-mod/go-version/svasandani/terrakita" />
 <br>
 </h1>
 <br>
