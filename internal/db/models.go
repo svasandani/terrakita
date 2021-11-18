@@ -1,5 +1,13 @@
 package db
 
+/******** Generic Database Models ********/
+
+type DatabaseConnection struct {
+	Username string
+	Password string
+	Database string
+}
+
 /******** API Models ********/
 
 /*=== Generic ===*/
