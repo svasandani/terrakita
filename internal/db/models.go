@@ -5,8 +5,8 @@ package db
 type DatabaseConnection struct {
 	Username string
 	Password string
-	Host string
-	Port string
+	Host     string
+	Port     string
 	Database string
 }
 
@@ -22,10 +22,12 @@ type PropertyValuePair struct {
 /*=== Filter ===*/
 
 type FilterRequest struct {
-	Lings             []int `json:"lings"`
-	LingProperties    []int `json:"ling_properties"`
-	Linglets          []int `json:"linglets"`
-	LingletProperties []int `json:"linglet_properties"`
+	Lings                      []int `json:"lings"`
+	LingProperties             []int `json:"ling_properties"`
+	LingPropertiesInclusive    bool  `json:"ling_properties_inclusive"` // defaults to true
+	Linglets                   []int `json:"linglets"`
+	LingletProperties          []int `json:"linglet_properties"`
+	LingletPropertiesInclusive bool  `json:"linglet_properties_inclusive"` // defaults to true
 }
 
 type FilterResponse struct {
@@ -39,4 +41,25 @@ type FilterResponseLing struct {
 
 type FilterResponseLinglet struct {
 	PropertyValuePairs []PropertyValuePair `json:"property_value_pairs"`
+}
+
+/******** Database Models ********/
+
+type Ling struct {
+	Id         int
+	Name       string
+	Properties []Property
+	Linglets   []Linglet
+}
+
+type Linglet struct {
+	Id         int
+	Name       string
+	Properties []Property
+}
+
+type Property struct {
+	Id    int
+	Name  string
+	Value string
 }

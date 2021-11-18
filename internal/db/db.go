@@ -3,7 +3,7 @@ package db
 import (
 	// "errors"
 	"fmt"
-  "log"
+	"log"
 	// "regexp"
 	// "time"
 
@@ -22,24 +22,57 @@ func ConnectToDatabase(dbc DatabaseConnection) error {
 
 	dbl, err := sql.Open("mysql", conn)
 	if err != nil {
-    log.Print("Error creating database connection!");
+		log.Print("Error creating database connection!")
 		return err
 	}
 
 	err = dbl.Ping()
 	if err != nil {
-    log.Print("Error connecting to database!");
+		log.Print("Error connecting to database!")
 		return err
 	}
 
 	db = dbl
 
-  return nil
+	return nil
 }
 
 // Filter - Retrieves all ling and linglet property-value pairs that fit the criteria.
 func Filter(frq FilterRequest) (FilterResponse, error) {
-  // TODO
+	err := validateFilterRequest(frq)
+	if err != nil {
+		log.Print("Error in filter request!")
+		return FilterResponse{}, err
+	}
 
-  return FilterResponse{}, nil
+	sel, err := db.Prepare("select id, name from lings where id == ?")
+	defer sel.Close()
+	if err != nil {
+		log.Print("Error preparing database request!")
+		return FilterResponse{}, err
+	}
+
+	var l Ling
+
+	err = sel.QueryRow(1).Scan(&l)
+	if err != nil {
+		log.Print("Error executing database request!")
+		return FilterResponse{}, err
+	}
+
+	lings := make([]FilterResponseLing, 1)
+	pv := make([]PropertyValuePair, 1)
+
+	pv[0] = PropertyValuePair{
+		Property: string(l.Id),
+		Value:    l.Name,
+	}
+
+	lings[0] = FilterResponseLing{
+		PropertyValuePairs: pv,
+	}
+
+	return FilterResponse{
+		Lings: lings,
+	}, nil
 }
