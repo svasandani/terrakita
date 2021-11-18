@@ -1,10 +1,11 @@
 package db
 
 import (
-	"errors"
+	// "errors"
 	"fmt"
-	"regexp"
-	"time"
+  "log"
+	// "regexp"
+	// "time"
 
 	"database/sql"
 
@@ -16,25 +17,29 @@ import (
 var db *sql.DB
 
 // ConnectToDatabase - Connects to the database.
-func ConnectToDatabase(dbc DatabaseConnection) *sql.DB {
+func ConnectToDatabase(dbc DatabaseConnection) error {
 	conn := fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?parseTime=true", dbc.Username, dbc.Password, dbc.Host, dbc.Port, dbc.Database)
 
 	dbl, err := sql.Open("mysql", conn)
 	if err != nil {
-		fmt.Errorf("Error opening connection to database: %+v", err)
+    log.Print("Error creating database connection!");
+		return err
 	}
 
 	err = dbl.Ping()
 	if err != nil {
-		fmt.Errorf("Error establishing connection to database: %+v", err)
+    log.Print("Error connecting to database!");
+		return err
 	}
 
 	db = dbl
 
-	return dbl
+  return nil
 }
 
 // Filter - Retrieves all ling and linglet property-value pairs that fit the criteria.
 func Filter(frq FilterRequest) (FilterResponse, error) {
   // TODO
+
+  return FilterResponse{}, nil
 }

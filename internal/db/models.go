@@ -6,7 +6,7 @@ type DatabaseConnection struct {
 	Username string
 	Password string
 	Host string
-	Port int
+	Port string
 	Database string
 }
 
