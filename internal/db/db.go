@@ -8,9 +8,7 @@ import (
 
 	"database/sql"
 
-	"github.com/go-sql-driver/mysql"
-
-  "github.com/svasandani/terrakita/internal/api"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 /******** Generic Database Functions ********/
@@ -19,14 +17,14 @@ var db *sql.DB
 
 // ConnectToDatabase - Connects to the database.
 func ConnectToDatabase(dbc DatabaseConnection) *sql.DB {
-	conn := fmt.Sprintf("%v:%v@/%v?parseTime=true", dbc.Username, dbc.Password, dbc.Database)
+	conn := fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?parseTime=true", dbc.Username, dbc.Password, dbc.Host, dbc.Port, dbc.Database)
 
 	dbl, err := sql.Open("mysql", conn)
 	if err != nil {
 		fmt.Errorf("Error opening connection to database: %+v", err)
 	}
 
-	err = dbLocal.Ping()
+	err = dbl.Ping()
 	if err != nil {
 		fmt.Errorf("Error establishing connection to database: %+v", err)
 	}

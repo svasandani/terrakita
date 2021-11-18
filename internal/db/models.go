@@ -5,6 +5,8 @@ package db
 type DatabaseConnection struct {
 	Username string
 	Password string
+	Host string
+	Port int
 	Database string
 }
 
