@@ -4,6 +4,8 @@ import (
 	// "errors"
 	"fmt"
 	"log"
+	"strconv"
+
 	// "regexp"
 	// "time"
 
@@ -45,7 +47,7 @@ func Filter(frq FilterRequest) (FilterResponse, error) {
 		return FilterResponse{}, err
 	}
 
-	sel, err := db.Prepare("select id, name from lings where id == ?")
+	sel, err := db.Prepare("select id, name from lings where id = ?")
 	defer sel.Close()
 	if err != nil {
 		log.Print("Error preparing database request!")
@@ -54,7 +56,7 @@ func Filter(frq FilterRequest) (FilterResponse, error) {
 
 	var l Ling
 
-	err = sel.QueryRow(1).Scan(&l)
+	err = sel.QueryRow(971).Scan(&l.Id, &l.Name)
 	if err != nil {
 		log.Print("Error executing database request!")
 		return FilterResponse{}, err
@@ -64,7 +66,7 @@ func Filter(frq FilterRequest) (FilterResponse, error) {
 	pv := make([]PropertyValuePair, 1)
 
 	pv[0] = PropertyValuePair{
-		Property: string(l.Id),
+		Property: strconv.Itoa(l.Id),
 		Value:    l.Name,
 	}
 
