@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/svasandani/terrakita/internal/db"
+  "github.com/svasandani/terrakita/internal/api"
 )
 
 type EVDB struct {
@@ -75,11 +76,7 @@ func parseEnvVariables() EnvVars {
 func createBackendServer(ev EnvVars) *http.Server {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		path := r.URL.Path
-    fmt.Println(path)
-		w.Write([]byte(fmt.Sprintf("hello")))
-	})
+	mux.HandleFunc("/api/search/filter", api.PostSearchFilterHandler)
 
 	s := ev.Server
 	addr := fmt.Sprintf("%v:%v", s.Host, s.Port)
