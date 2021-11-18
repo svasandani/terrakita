@@ -31,6 +31,8 @@ type EnvVars struct {
 func main() {
 	ev := parseEnvVariables()
 
+	log.Printf("Using environment variables:\n %+v", ev)
+
 	evdb := ev.DatabaseConnection
 	err := db.ConnectToDatabase(db.DatabaseConnection{
 		Username: evdb.Username,
@@ -57,6 +59,8 @@ func parseEnvVariables() EnvVars {
 	
 	sh := flag.String("serverHost", "localhost", "Host to launch the server on")
 	sp := flag.String("serverPort", "7107", "Port to launch the server on")
+
+	flag.Parse()
 
 	return EnvVars{
 		DatabaseConnection: EVDB{
