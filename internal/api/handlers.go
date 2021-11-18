@@ -8,22 +8,52 @@ import (
 )
 
 func PostSearchFilterHandler(w http.ResponseWriter, r *http.Request) {
-	var f db.FilterRequest
+  var f db.FilterRequest
+  var js []byte
+  var er error
+  
+  err := json.NewDecoder(r.Body).Decode(&f)
+  if err != nil {
+    js, er = errorResponse(err, http.StatusBadRequest)
+    if er != nil {
+      http.Error(w, err.Error(), http.StatusInternalServerError)
+      return
+    }
+  }
+  
+  fr, err := db.Filter(f)
+  if err != nil {
+    js, er = errorResponse(err, http.StatusInternalServerError)
+    if er != nil {
+      http.Error(w, err.Error(), http.StatusInternalServerError)
+      return
+    }
+  }
+  
+  js, err = json.Marshal(fr)
+  if err != nil {
+    js, er = errorResponse(err, http.StatusInternalServerError)
+    if er != nil {
+      http.Error(w, err.Error(), http.StatusInternalServerError)
+      return
+    }
+  }
 
-	err := json.NewDecoder(r.Body).Decode(&f)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+  w.Header().Set("Content-Type", "application/json")
+  w.WriteHeader(http.StatusOK)
+  w.Write(js)
+}
 
-	fr := db.FilterResponse{}
-	js, err := json.Marshal(fr)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(js)
+func errorResponse(e error, i int) ([]byte, error) {
+  er := db.ErrorResponse{
+    Message: e.Error(),
+    StatusCode: i,
+  }
+  
+  js, err := json.Marshal(er)
+  if err != nil {
+    return nil, err
+  }
+  
+  return js, nil
 }
