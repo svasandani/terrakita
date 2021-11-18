@@ -4,6 +4,8 @@ import (
   "fmt"
 	"log"
 	"net/http"
+
+  "github.com/svasandani/terrakita/internal/api"
 )
 
 func main() {
@@ -16,11 +18,7 @@ func main() {
 func createBackendServer() *http.Server {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		path := r.URL.Path
-    fmt.Println(path)
-		w.Write([]byte(fmt.Sprintf("hello")))
-	})
+	mux.HandleFunc("/api/search/filter", api.PostSearchFilterHandler)
 
 	server := http.Server{
 		Addr:    "localhost:3000",
