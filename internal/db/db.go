@@ -8,6 +8,8 @@ import (
 	"database/sql"
 
 	_ "github.com/go-sql-driver/mysql"
+
+	"github.com/svasandani/terrakita/internal/benchmark"
 )
 
 /******** Generic Database Functions ********/
@@ -24,7 +26,9 @@ func ConnectToDatabase(dbc DatabaseConnection) error {
 		return err
 	}
 
+	benchmark.StartTare()
 	err = dbl.Ping()
+	benchmark.StopTare()
 	if err != nil {
 		log.Print("Error connecting to database!")
 		return err
@@ -49,7 +53,9 @@ func Filter(frq FilterRequest) (FilterResponse, error) {
 	// hasLingletProperties := len(frq.LingletProperties) != 0
 
 	if hasLing && !hasLingProperties && !hasLinglet {
+		benchmark.Start("Filter lings only")
 		fr, err := filterLings(frq)
+		benchmark.Stop("Filter lings only")
 		if err != nil {
 			log.Print("Error filtering lings!")
 			return FilterResponse{}, err
