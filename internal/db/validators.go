@@ -6,12 +6,13 @@ import (
 )
 
 func validateFilterRequest(frq FilterRequest) error {
+	hasGroup := frq.Group != 0
 	hasLing := len(frq.Lings) != 0
 	hasLingProperties := len(frq.LingProperties) != 0
 	hasLinglet := len(frq.Linglets) != 0
 	hasLingletProperties := len(frq.LingletProperties) != 0
 
-	if hasLing || hasLingProperties || hasLinglet || hasLingletProperties {
+	if hasGroup && (hasLing || hasLingProperties || hasLinglet || hasLingletProperties) {
 		return nil
 	}
 

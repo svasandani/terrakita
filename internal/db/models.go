@@ -20,6 +20,7 @@ type ErrorResponse struct {
 }
 
 type PropertyValuePair struct {
+	Id       string `json:"id"`
 	Property string `json:"property"`
 	Value    string `json:"value"`
 }
@@ -27,6 +28,7 @@ type PropertyValuePair struct {
 /*=== Filter ===*/
 
 type FilterRequest struct {
+	Group                      int   `json:"group"`
 	Lings                      []int `json:"lings"`
 	LingProperties             []int `json:"ling_properties"`
 	LingPropertiesInclusive    bool  `json:"ling_properties_inclusive"` // defaults to true
@@ -40,35 +42,35 @@ type FilterResponse struct {
 }
 
 type FilterResponseLing struct {
-	id                 string                  `json:"id"`
-	name               string                  `json:"name"`
+	Id                 string                  `json:"id"`
+	Name               string                  `json:"name"`
 	PropertyValuePairs []PropertyValuePair     `json:"property_value_pairs"`
 	Linglets           []FilterResponseLinglet `json:"linglets,omitempty"`
 }
 
 type FilterResponseLinglet struct {
-	id                 string              `json:"id"`
-	name               string              `json:"name"`
+	Id                 string              `json:"id"`
+	Name               string              `json:"name"`
 	PropertyValuePairs []PropertyValuePair `json:"property_value_pairs"`
 }
 
 /******** Database Models ********/
 
 type Ling struct {
-	Id         int
+	Id         string
 	Name       string
 	Properties []Property
 	Linglets   []Linglet
 }
 
 type Linglet struct {
-	Id         int
+	Id         string
 	Name       string
 	Properties []Property
 }
 
 type Property struct {
-	Id    int
+	Id    string
 	Name  string
 	Value string
 }
