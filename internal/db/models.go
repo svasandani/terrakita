@@ -15,8 +15,8 @@ type DatabaseConnection struct {
 /*=== Generic ===*/
 
 type ErrorResponse struct {
-	Message string `json:"message"`
-	StatusCode int `json:"status_code"`
+	Message    string `json:"message"`
+	StatusCode int    `json:"status_code"`
 }
 
 type PropertyValuePair struct {
@@ -40,11 +40,15 @@ type FilterResponse struct {
 }
 
 type FilterResponseLing struct {
+	id                 string                  `json:"id"`
+	name               string                  `json:"name"`
 	PropertyValuePairs []PropertyValuePair     `json:"property_value_pairs"`
 	Linglets           []FilterResponseLinglet `json:"linglets,omitempty"`
 }
 
 type FilterResponseLinglet struct {
+	id                 string              `json:"id"`
+	name               string              `json:"name"`
 	PropertyValuePairs []PropertyValuePair `json:"property_value_pairs"`
 }
 
