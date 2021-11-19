@@ -1,12 +1,9 @@
 package db
 
 import (
-	// "errors"
 	"fmt"
 	"log"
-
-	// "regexp"
-	// "time"
+	"strings"
 
 	"database/sql"
 
@@ -67,25 +64,34 @@ func Filter(frq FilterRequest) (FilterResponse, error) {
 func filterLings(frq FilterRequest) (FilterResponse, error) {
 	lings := make([]FilterResponseLing, len(frq.Lings))
 
-	for i, lid := range frq.Lings {
-		// Select lings
-		sel, err := db.Prepare("SELECT id, name FROM lings WHERE id = ?")
-		defer sel.Close()
-		if err != nil {
-			log.Print("Error preparing database request!")
-			return FilterResponse{}, err
-		}
+	// pass group then lings into query args
+	qargs := make([]interface{}, len(frq.Lings) + 1)
+	qargs[0] = frq.Group
+	for i, id := range frq.Lings {
+		qargs[i + 1] = id
+	}
 
-		var l Ling
+	stmt := `SELECT id, name FROM lings WHERE group_id = ? AND id IN (?` + strings.Repeat(",?", len(qargs) - 2) + `)`
+	ls, err := db.Query(stmt, qargs...)
+	if err != nil {
+		log.Print("Error preparing database request!")
+		return FilterResponse{}, err
+	}
+	defer ls.Close()
 
-		err = sel.QueryRow(lid).Scan(&l.Id, &l.Name)
+	i := 0
+
+	for ls.Next() {
+		var l FilterResponseLing
+
+		err = ls.Scan(&l.Id, &l.Name)
 		if err != nil {
 			log.Print("Error executing database request!")
 			return FilterResponse{}, err
 		}
 
 		// Select properties
-		rows, err := db.Query("SELECT properties.id, properties.name, lings_properties.value FROM lings_properties INNER JOIN properties ON lings_properties.property_id = properties.id WHERE ling_id = ? and lings_properties.group_id = ?", lid, frq.Group)
+		rows, err := db.Query("SELECT properties.id, properties.name, lings_properties.value FROM lings_properties INNER JOIN properties ON lings_properties.property_id = properties.id WHERE lings_properties.group_id = ? AND ling_id = ?", frq.Group, l.Id)
 		if err != nil {
 			log.Print("Error preparing database request!")
 			return FilterResponse{}, err
@@ -106,11 +112,9 @@ func filterLings(frq FilterRequest) (FilterResponse, error) {
 			pvs = append(pvs, pv)
 		}
 
-		lings[i] = FilterResponseLing{
-			Id:                 l.Id,
-			Name:               l.Name,
-			PropertyValuePairs: pvs,
-		}
+		l.PropertyValuePairs = pvs
+		lings[i] = l
+		i++
 	}
 
 	return FilterResponse{
