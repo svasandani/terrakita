@@ -59,14 +59,11 @@ type FilterResponseLinglet struct {
 type Ling struct {
 	Id         string
 	Name       string
-	Properties []Property
-	Linglets   []Linglet
 }
 
 type Linglet struct {
 	Id         string
 	Name       string
-	Properties []Property
 }
 
 type Property struct {
