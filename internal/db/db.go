@@ -193,15 +193,41 @@ func filterLinglets(frq FilterRequest) (FilterResponse, error) {
 			return FilterResponse{}, err
 		}
 
+		qargs = make([]interface{}, len(frq.LingletProperties)+2)
+		qargs[0] = frq.Group
+		qargs[1] = ll.Id
+		for i, id := range frq.LingletProperties {
+			qargs[i+2] = id
+		}
+
+		// if we need all properties, perform an extra query for early return
+		if len(frq.LingletProperties) > 0 && frq.LingletPropertiesInclusive {
+			stmt = `SELECT COUNT(properties.id) FROM lings_properties INNER JOIN properties ON lings_properties.property_id = properties.id WHERE lings_properties.group_id = ? AND ling_id = ? AND lings_properties.property_id IN (?` + strings.Repeat(",?", len(frq.LingletProperties)-1) + `)`
+			c := db.QueryRow(stmt, qargs...)
+
+			var count int
+			c.Scan(&count)
+
+			if count != len(frq.LingletProperties) {
+				continue
+			}
+		}
+
+		// build statement dynamically
+		stmt = "SELECT properties.id, properties.name, lings_properties.value FROM lings_properties INNER JOIN properties ON lings_properties.property_id = properties.id WHERE lings_properties.group_id = ? AND ling_id = ?"
+		if len(frq.LingletProperties) != 0 {
+			stmt += ` AND lings_properties.property_id IN (?` + strings.Repeat(",?", len(frq.LingletProperties)-1) + `)`
+		}
+
 		// Select properties
-		ps, err := db.Query("SELECT properties.id, properties.name, lings_properties.value FROM lings_properties INNER JOIN properties ON lings_properties.property_id = properties.id WHERE lings_properties.group_id = ? AND ling_id = ?", frq.Group, ll.Id)
+		ps, err := db.Query(stmt, qargs...)
 		if err != nil {
 			log.Print("Error preparing database request!")
 			return FilterResponse{}, err
 		}
 		defer ps.Close()
 
-		var pvs []PropertyValuePair
+		pvs := make([]PropertyValuePair, 0)
 
 		for ps.Next() {
 			var pv PropertyValuePair
