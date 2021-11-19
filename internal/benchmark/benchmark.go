@@ -14,7 +14,7 @@ func Start(t string) {
 		benchmarks = make(map[string]time.Time)
 	}
 
-	log.Printf("Timer '%v' started",t)
+	log.Printf("Timer '%v' started", t)
 	benchmarks[t] = time.Now()
 }
 

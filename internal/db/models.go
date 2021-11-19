@@ -57,13 +57,13 @@ type FilterResponseLinglet struct {
 /******** Database Models ********/
 
 type Ling struct {
-	Id         string
-	Name       string
+	Id   string
+	Name string
 }
 
 type Linglet struct {
-	Id         string
-	Name       string
+	Id   string
+	Name string
 }
 
 type Property struct {
