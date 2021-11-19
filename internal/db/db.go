@@ -47,10 +47,12 @@ func Filter(frq FilterRequest) (FilterResponse, error) {
 		return FilterResponse{}, err
 	}
 
-	hasLing := len(frq.Lings) != 0
-	hasLinglet := len(frq.Linglets) != 0
+	hasLings := len(frq.Lings) != 0
+	hasLingProperties := len(frq.LingProperties) != 0
+	hasLinglets := len(frq.Linglets) != 0
+	hasLingletProperties := len(frq.LingletProperties) != 0
 
-	if hasLing && !hasLinglet {
+	if hasLings {
 		benchmark.Start("Filter lings only")
 		fr, err := filterLings(frq)
 		benchmark.Stop("Filter lings only")
@@ -60,7 +62,7 @@ func Filter(frq FilterRequest) (FilterResponse, error) {
 		}
 
 		return fr, nil
-	} else if hasLinglet && !hasLing {
+	} else if hasLinglets {
 		benchmark.Start("Filter linglets only")
 		fr, err := filterLinglets(frq)
 		benchmark.Stop("Filter linglets only")
@@ -70,6 +72,10 @@ func Filter(frq FilterRequest) (FilterResponse, error) {
 		}
 
 		return fr, nil
+	} else if hasLingProperties {
+
+	} else if hasLingletProperties {
+
 	}
 
 	return FilterResponse{}, nil

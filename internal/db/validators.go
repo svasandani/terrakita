@@ -12,11 +12,12 @@ func validateFilterRequest(frq FilterRequest) error {
 	hasLinglet := len(frq.Linglets) != 0
 	hasLingletProperties := len(frq.LingletProperties) != 0
 
-	if hasGroup && (hasLing || hasLingProperties || hasLinglet || hasLingletProperties) {
+	// needs group, and one of either (ling + properties) or (linglet + properties)
+	if hasGroup && ((hasLing || hasLingProperties) != (hasLinglet || hasLingletProperties)) {
 		return nil
 	}
 
 	log.Printf("Malformed request: %+v", frq)
 
-	return fmt.Errorf("Missing field from filter request!")
+	return fmt.Errorf("Malformed filter request!")
 }
