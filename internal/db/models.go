@@ -79,9 +79,9 @@ type FilterLingletsRequest struct {
 }
 
 type FilterLingletsResponse struct {
-	Type  string                    `json:"type"`
-	On    string                    `json:"on"`
-	Lings []FilterLingsResponseLing `json:"lings"`
+	Type  string                       `json:"type"`
+	On    string                       `json:"on"`
+	Lings []FilterLingletsResponseLing `json:"lings"`
 }
 
 type FilterLingletsResponseLing struct {
