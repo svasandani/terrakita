@@ -106,9 +106,9 @@ type FilterLingletPropertiesRequest struct {
 }
 
 type FilterLingletPropertiesResponse struct {
-	Type       string                                 `json:"type"`
-	On         string                                 `json:"on"`
-	Properties []FilterLingPropertiesResponseProperty `json:"properties"`
+	Type       string                                    `json:"type"`
+	On         string                                    `json:"on"`
+	Properties []FilterLingletPropertiesResponseProperty `json:"properties"`
 }
 
 type FilterLingletPropertiesResponseProperty struct {
