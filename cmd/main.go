@@ -80,7 +80,10 @@ func parseEnvVariables() EnvVars {
 func createBackendServer(ev EnvVars) *http.Server {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/api/search/filter", api.PostSearchFilterHandler)
+	mux.HandleFunc("/api/search/filter/lings", api.FilterLingsHandler)
+	mux.HandleFunc("/api/search/filter/ling_properties", api.FilterLingPropertiesHandler)
+	mux.HandleFunc("/api/search/filter/linglets", api.FilterLingletsHandler)
+	mux.HandleFunc("/api/search/filter/linglet_properties", api.FilterLingletPropertiesHandler)
 
 	s := ev.Server
 	addr := fmt.Sprintf("%v:%v", s.Host, s.Port)
