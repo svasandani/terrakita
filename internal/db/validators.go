@@ -5,19 +5,50 @@ import (
 	"log"
 )
 
-func validateFilterRequest(frq FilterRequest) error {
-	hasGroup := frq.Group != 0
-	hasLing := len(frq.Lings) != 0
-	hasLingProperties := len(frq.LingProperties) != 0
-	hasLinglet := len(frq.Linglets) != 0
-	hasLingletProperties := len(frq.LingletProperties) != 0
+func validateFilterLingsRequest(flr FilterLingsRequest) error {
+	hasGroup := flr.Group != 0
+	hasLings := len(flr.Lings) != 0
 
-	// needs group, and one of either (ling + properties) or (linglet + properties)
-	if hasGroup && ((hasLing || hasLingProperties) != (hasLinglet || hasLingletProperties)) {
+	if hasGroup && hasLings {
 		return nil
 	}
 
-	log.Printf("Malformed request: %+v", frq)
+	log.Printf("Malformed request: %+v", flr)
+	return fmt.Errorf("Malformed filter request!")
+}
 
+func validateFilterLingPropertiesRequest(flpr FilterLingPropertiesRequest) error {
+	hasGroup := flpr.Group != 0
+	hasLingProperties := len(flpr.LingProperties) != 0
+
+	if hasGroup && hasLingProperties {
+		return nil
+	}
+
+	log.Printf("Malformed request: %+v", flpr)
+	return fmt.Errorf("Malformed filter request!")
+}
+
+func validateFilterLingletsRequest(fllr FilterLingletsRequest) error {
+	hasGroup := fllr.Group != 0
+	hasLinglets := len(fllr.Linglets) != 0
+
+	if hasGroup && hasLinglets {
+		return nil
+	}
+
+	log.Printf("Malformed request: %+v", fllr)
+	return fmt.Errorf("Malformed filter request!")
+}
+
+func validateFilterLingletPropertiesRequest(fllpr FilterLingletPropertiesRequest) error {
+	hasGroup := fllpr.Group != 0
+	hasLingletProperties := len(fllpr.LingletProperties) != 0
+
+	if hasGroup && hasLingletProperties {
+		return nil
+	}
+
+	log.Printf("Malformed request: %+v", fllpr)
 	return fmt.Errorf("Malformed filter request!")
 }
