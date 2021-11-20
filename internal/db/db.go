@@ -39,49 +39,13 @@ func ConnectToDatabase(dbc DatabaseConnection) error {
 	return nil
 }
 
-// Filter - Retrieves all ling and linglet property-value pairs that fit the criteria.
-func Filter(frq FilterRequest) (FilterResponse, error) {
-	err := validateFilterRequest(frq)
-	if err != nil {
-		log.Print("Error in filter request!")
-		return FilterResponse{}, err
-	}
-
-	hasLings := len(frq.Lings) != 0
-	hasLingProperties := len(frq.LingProperties) != 0
-	hasLinglets := len(frq.Linglets) != 0
-	hasLingletProperties := len(frq.LingletProperties) != 0
-
-	if hasLings {
-		benchmark.Start("Filter lings only")
-		fr, err := filterLings(frq)
-		benchmark.Stop("Filter lings only")
-		if err != nil {
-			log.Print("Error filtering lings!")
-			return FilterResponse{}, err
-		}
-
-		return fr, nil
-	} else if hasLinglets {
-		benchmark.Start("Filter linglets only")
-		fr, err := filterLinglets(frq)
-		benchmark.Stop("Filter linglets only")
-		if err != nil {
-			log.Print("Error filtering linglets!")
-			return FilterResponse{}, err
-		}
-
-		return fr, nil
-	} else if hasLingProperties {
-
-	} else if hasLingletProperties {
-
-	}
-
-	return FilterResponse{}, nil
-}
-
 func FilterLings(flr FilterLingsRequest) (FilterLingsResponse, error) {
+	err := validateFilterLingsRequest(flr)
+	if err != nil {
+		log.Print("Malformed request!")
+		return FilterLingsResponse{}, err
+	}
+
 	lings := make([]FilterLingsResponseLing, len(flr.Lings))
 
 	// pass group then lings into query args
@@ -172,6 +136,12 @@ func FilterLings(flr FilterLingsRequest) (FilterLingsResponse, error) {
 }
 
 func FilterLinglets(fllr FilterLingletsRequest) (FilterLingletsResponse, error) {
+	err := validateFilterLingletsRequest(fllr)
+	if err != nil {
+		log.Print("Malformed request!")
+		return FilterLingletsResponse{}, err
+	}
+
 	lmap := make(map[Ling][]FilterLingletsResponseLinglet)
 
 	// pass group then lings into query args
