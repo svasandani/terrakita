@@ -19,39 +19,102 @@ type ErrorResponse struct {
 	StatusCode int    `json:"status_code"`
 }
 
-type PropertyValuePair struct {
-	Id       string `json:"id"`
-	Property string `json:"property"`
-	Value    string `json:"value"`
+type NameValuePair struct {
+	Id    string `json:"id"`
+	Name  string `json:"name"`
+	Value string `json:"value"`
 }
 
 /*=== Filter ===*/
 
-type FilterRequest struct {
+// Filter Lings
+
+type FilterLingsRequest struct {
+	Group                   int   `json:"group"`
+	Lings                   []int `json:"lings"`
+	LingProperties          []int `json:"ling_properties"`
+	LingPropertiesInclusive bool  `json:"ling_properties_inclusive"`
+}
+
+type FilterLingsResponse struct {
+	Type  string                    `json:"type"`
+	On    string                    `json:"on"`
+	Lings []FilterLingsResponseLing `json:"lings"`
+}
+
+type FilterLingsResponseLing struct {
+	Id                 string          `json:"id"`
+	Name               string          `json:"name"`
+	PropertyValuePairs []NameValuePair `json:"property_value_pairs"`
+}
+
+// Filter Ling Properties
+
+type FilterLingPropertiesRequest struct {
+	Group          int   `json:"group"`
+	LingProperties []int `json:"ling_properties"`
+	Lings          []int `json:"lings"`
+	LingsInclusive bool  `json:"lings_inclusive"`
+}
+
+type FilterLingPropertiesResponse struct {
+	Type       string                                 `json:"type"`
+	On         string                                 `json:"on"`
+	Properties []FilterLingPropertiesResponseProperty `json:"properties"`
+}
+
+type FilterLingPropertiesResponseProperty struct {
+	Id             string          `json:"id"`
+	Name           string          `json:"name"`
+	LingValuePairs []NameValuePair `json:"ling_value_pairs"`
+}
+
+// Filter Linglets
+
+type FilterLingletsRequest struct {
 	Group                      int   `json:"group"`
-	Lings                      []int `json:"lings"`
-	LingProperties             []int `json:"ling_properties"`
-	LingPropertiesInclusive    bool  `json:"ling_properties_inclusive"` // defaults to true
 	Linglets                   []int `json:"linglets"`
 	LingletProperties          []int `json:"linglet_properties"`
-	LingletPropertiesInclusive bool  `json:"linglet_properties_inclusive"` // defaults to true
+	LingletPropertiesInclusive bool  `json:"linglet_properties_inclusive"`
 }
 
-type FilterResponse struct {
-	Lings []FilterResponseLing `json:"lings"`
+type FilterLingletsResponse struct {
+	Type  string                    `json:"type"`
+	On    string                    `json:"on"`
+	Lings []FilterLingsResponseLing `json:"lings"`
 }
 
-type FilterResponseLing struct {
-	Id                 string                  `json:"id"`
-	Name               string                  `json:"name"`
-	PropertyValuePairs []PropertyValuePair     `json:"property_value_pairs"`
-	Linglets           []FilterResponseLinglet `json:"linglets,omitempty"`
+type FilterLingletsResponseLing struct {
+	Id       string                          `json:"id"`
+	Name     string                          `json:"name"`
+	Linglets []FilterLingletsResponseLinglet `json:"linglets,omitempty"`
 }
 
-type FilterResponseLinglet struct {
-	Id                 string              `json:"id"`
-	Name               string              `json:"name"`
-	PropertyValuePairs []PropertyValuePair `json:"property_value_pairs"`
+type FilterLingletsResponseLinglet struct {
+	Id                 string          `json:"id"`
+	Name               string          `json:"name"`
+	PropertyValuePairs []NameValuePair `json:"property_value_pairs"`
+}
+
+// Filter Linglet Properties
+
+type FilterLingletPropertiesRequest struct {
+	Group             int   `json:"group"`
+	LingletProperties []int `json:"linglet_properties"`
+	Linglets          []int `json:"linglets"`
+	LingletsInclusive bool  `json:"linglets_inclusive"`
+}
+
+type FilterLingletPropertiesResponse struct {
+	Type       string                                 `json:"type"`
+	On         string                                 `json:"on"`
+	Properties []FilterLingPropertiesResponseProperty `json:"properties"`
+}
+
+type FilterLingletPropertiesResponseProperty struct {
+	Id                string          `json:"id"`
+	Name              string          `json:"name"`
+	LingletValuePairs []NameValuePair `json:"linglet_value_pairs"`
 }
 
 /******** Database Models ********/
