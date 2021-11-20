@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/svasandani/terrakita/internal/benchmark"
 	"github.com/svasandani/terrakita/internal/db"
 )
 
@@ -23,7 +24,9 @@ func FilterLingsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	benchmark.Start("FilterLings")
 	fr, err := db.FilterLings(f)
+	benchmark.Stop("FilterLings")
 	if err != nil {
 		js, er = errorResponse(err, http.StatusInternalServerError)
 		if er != nil {
@@ -64,7 +67,9 @@ func FilterLingPropertiesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	benchmark.Start("FilterLingProperties")
 	fr, err := db.FilterLingProperties(f)
+	benchmark.Stop("FilterLingProperties")
 	if err != nil {
 		js, er = errorResponse(err, http.StatusInternalServerError)
 		if er != nil {
@@ -105,7 +110,9 @@ func FilterLingletsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	benchmark.Start("FilterLinglets")
 	fr, err := db.FilterLinglets(f)
+	benchmark.Stop("FilterLinglets")
 	if err != nil {
 		js, er = errorResponse(err, http.StatusInternalServerError)
 		if er != nil {
@@ -146,7 +153,9 @@ func FilterLingletPropertiesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	benchmark.Start("FilterLingletProperties")
 	fr, err := db.FilterLingletProperties(f)
+	benchmark.Stop("FilterLingletProperties")
 	if err != nil {
 		js, er = errorResponse(err, http.StatusInternalServerError)
 		if er != nil {

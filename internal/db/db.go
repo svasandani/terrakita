@@ -8,8 +8,6 @@ import (
 	"database/sql"
 
 	_ "github.com/go-sql-driver/mysql"
-
-	"github.com/svasandani/terrakita/internal/benchmark"
 )
 
 /******** Generic Database Functions ********/
@@ -26,9 +24,7 @@ func ConnectToDatabase(dbc DatabaseConnection) error {
 		return err
 	}
 
-	benchmark.StartTare()
 	err = dbl.Ping()
-	benchmark.StopTare()
 	if err != nil {
 		log.Print("Error connecting to database!")
 		return err
