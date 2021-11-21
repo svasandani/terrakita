@@ -33,5 +33,3 @@ func ConnectToDatabase(dbc DatabaseConnection) error {
 
 	return nil
 }
-
-

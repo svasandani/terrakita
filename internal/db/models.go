@@ -117,6 +117,48 @@ type FilterLingletPropertiesResponseProperty struct {
 	LingletValuePairs []NameValuePair `json:"linglet_value_pairs"`
 }
 
+/*=== Compare ===*/
+
+// Compare Lings
+
+type CompareLingsRequest struct {
+	Group int   `json:"group"`
+	Lings []int `json:"lings"`
+}
+
+type CompareLingsResponse struct {
+	Type     string                         `json:"type"`
+	On       []string                       `json:"on"`
+	Common   []NameValuePair                `json:"common"`
+	Distinct []CompareLingsResponseProperty `json:"distinct"`
+}
+
+type CompareLingsResponseProperty struct {
+	Id             string          `json:"id"`
+	Name           string          `json:"name"`
+	LingValuePairs []NameValuePair `json:"ling_value_pairs"`
+}
+
+// Compare Linglets
+
+type CompareLingletsRequest struct {
+	Group    int   `json:"group"`
+	Linglets []int `json:"linglets"`
+}
+
+type CompareLingletsResponse struct {
+	Type     string                            `json:"type"`
+	On       []string                          `json:"on"`
+	Common   []NameValuePair                   `json:"common"`
+	Distinct []CompareLingletsResponseProperty `json:"distinct"`
+}
+
+type CompareLingletsResponseProperty struct {
+	Id                string          `json:"id"`
+	Name              string          `json:"name"`
+	LingletValuePairs []NameValuePair `json:"linglet_value_pairs"`
+}
+
 /******** Database Models ********/
 
 type Ling struct {
