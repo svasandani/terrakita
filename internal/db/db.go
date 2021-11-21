@@ -119,6 +119,10 @@ func FilterLings(flr FilterLingsRequest) (FilterLingsResponse, error) {
 			pvs = append(pvs, nv)
 		}
 
+		if len(pvs) == 0 {
+			continue;
+		}
+
 		l.PropertyValuePairs = pvs
 		lings[i] = l
 		i++
@@ -215,6 +219,10 @@ func FilterLingProperties(flpr FilterLingPropertiesRequest) (FilterLingPropertie
 			lvs = append(lvs, nv)
 		}
 
+		if len(lvs) == 0 {
+			continue;
+		}
+
 		p.LingValuePairs = lvs
 		properties[i] = p
 		i++
@@ -309,6 +317,10 @@ func FilterLinglets(fllr FilterLingletsRequest) (FilterLingletsResponse, error) 
 			}
 
 			pvs = append(pvs, nv)
+		}
+
+		if len(pvs) == 0 {
+			continue;
 		}
 
 		ll.PropertyValuePairs = pvs
@@ -421,6 +433,10 @@ func FilterLingletProperties(fllpr FilterLingletPropertiesRequest) (FilterLingle
 			}
 
 			llvs = append(llvs, nv)
+		}
+
+		if len(llvs) == 0 {
+			continue;
 		}
 
 		p.LingletValuePairs = llvs
