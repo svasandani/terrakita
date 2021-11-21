@@ -85,6 +85,9 @@ func createBackendServer(ev EnvVars) *http.Server {
 	mux.HandleFunc("/api/search/filter/linglets", api.FilterLingletsHandler)
 	mux.HandleFunc("/api/search/filter/linglet_properties", api.FilterLingletPropertiesHandler)
 
+	
+	mux.HandleFunc("/api/search/compare/lings", api.CompareLingsHandler)
+
 	s := ev.Server
 	addr := fmt.Sprintf("%v:%v", s.Host, s.Port)
 

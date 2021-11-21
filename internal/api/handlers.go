@@ -180,6 +180,49 @@ func FilterLingletPropertiesHandler(w http.ResponseWriter, r *http.Request) {
 	writeResponse(w, js)
 }
 
+func CompareLingsHandler(w http.ResponseWriter, r *http.Request) {
+	var c db.CompareLingsRequest
+	var js []byte
+	var er error
+
+	err := json.NewDecoder(r.Body).Decode(&c)
+	if err != nil {
+		js, er = errorResponse(err, http.StatusBadRequest)
+		if er != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writeResponse(w, js)
+		return
+	}
+
+	benchmark.Start("CompareLings")
+	cr, err := db.CompareLings(c)
+	benchmark.Stop("CompareLings")
+	if err != nil {
+		js, er = errorResponse(err, http.StatusInternalServerError)
+		if er != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writeResponse(w, js)
+		return
+	}
+
+	js, err = json.Marshal(cr)
+	if err != nil {
+		js, er = errorResponse(err, http.StatusInternalServerError)
+		if er != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writeResponse(w, js)
+		return
+	}
+
+	writeResponse(w, js)
+}
+
 func writeResponse(w http.ResponseWriter, js []byte) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
