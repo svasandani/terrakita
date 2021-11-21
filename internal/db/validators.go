@@ -52,3 +52,27 @@ func validateFilterLingletPropertiesRequest(fllpr FilterLingletPropertiesRequest
 	log.Printf("Malformed request: %+v", fllpr)
 	return fmt.Errorf("Malformed filter request!")
 }
+
+func validateCompareLingsRequest(clr CompareLingsRequest) error {
+	hasGroup := clr.Group != 0
+	hasLings := len(clr.Lings) != 0
+
+	if hasGroup && hasLings {
+		return nil
+	}
+
+	log.Printf("Malformed request: %+v", clr)
+	return fmt.Errorf("Malformed filter request!")
+}
+
+func validateCompareLingletsRequest(cllr CompareLingletsRequest) error {
+	hasGroup := cllr.Group != 0
+	hasLinglets := len(cllr.Linglets) != 0
+
+	if hasGroup && hasLinglets {
+		return nil
+	}
+
+	log.Printf("Malformed request: %+v", cllr)
+	return fmt.Errorf("Malformed filter request!")
+}
