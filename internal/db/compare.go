@@ -141,8 +141,8 @@ func CompareLings(clr CompareLingsRequest) (CompareLingsResponse, error) {
 	return CompareLingsResponse{
 		Type:     "compare",
 		On:       lings,
-		Common:   common,
-		Distinct: distinct,
+		Common:   common[:i],
+		Distinct: distinct[:j],
 	}, nil
 }
 
@@ -157,16 +157,16 @@ func CompareLinglets(cllr CompareLingletsRequest) (CompareLingletsResponse, erro
 	nMap := make(map[string]string)          // property names
 	cMap := make(map[string]int)             // common property counts
 	dMap := make(map[string][]NameValuePair) // data values
-	lings := make([]string, len(cllr.Linglets))
+	linglets := make([]string, len(cllr.Linglets))
 
-	// pass group then lings into query args
+	// pass group then linglets into query args
 	qargs := make([]interface{}, len(cllr.Linglets)+1)
 	qargs[0] = cllr.Group
 	for i, id := range cllr.Linglets {
 		qargs[i+1] = id
 	}
 
-	// SELECT lings
+	// SELECT linglets
 	stmt := `SELECT id, name FROM lings WHERE group_id = ? AND depth = 1 AND id IN (?` + strings.Repeat(",?", len(cllr.Linglets)-1) + `)`
 	ls, err := db.Query(stmt, qargs...)
 	if err != nil {
@@ -186,7 +186,7 @@ func CompareLinglets(cllr CompareLingletsRequest) (CompareLingletsResponse, erro
 			return CompareLingletsResponse{}, err
 		}
 
-		lings[i] = l.Name
+		linglets[i] = l.Name
 
 		// build statement dynamically
 		stmt = "SELECT properties.id, properties.name, lings_properties.value FROM lings_properties INNER JOIN properties ON lings_properties.property_id = properties.id WHERE lings_properties.group_id = ? AND ling_id = ?"
@@ -279,8 +279,8 @@ func CompareLinglets(cllr CompareLingletsRequest) (CompareLingletsResponse, erro
 
 	return CompareLingletsResponse{
 		Type:     "compare",
-		On:       lings,
-		Common:   common,
-		Distinct: distinct,
+		On:       linglets,
+		Common:   common[:i],
+		Distinct: distinct[:j],
 	}, nil
 }
