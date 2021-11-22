@@ -140,7 +140,8 @@ func CompareLings(clr CompareLingsRequest) (CompareLingsResponse, error) {
 
 	return CompareLingsResponse{
 		Type:     "compare",
-		On:       lings,
+		On:       "lings",
+		Lings:    lings,
 		Common:   common[:i],
 		Distinct: distinct[:j],
 	}, nil
@@ -279,7 +280,8 @@ func CompareLinglets(cllr CompareLingletsRequest) (CompareLingletsResponse, erro
 
 	return CompareLingletsResponse{
 		Type:     "compare",
-		On:       linglets,
+		On:       "linglets",
+		Linglets: linglets,
 		Common:   common[:i],
 		Distinct: distinct[:j],
 	}, nil

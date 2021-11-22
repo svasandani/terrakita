@@ -128,7 +128,8 @@ type CompareLingsRequest struct {
 
 type CompareLingsResponse struct {
 	Type     string                         `json:"type"`
-	On       []string                       `json:"on"`
+	On       string                         `json:"on"`
+	Lings    []string                       `json:"lings"`
 	Common   []NameValuePair                `json:"common"`
 	Distinct []CompareLingsResponseProperty `json:"distinct"`
 }
@@ -148,7 +149,8 @@ type CompareLingletsRequest struct {
 
 type CompareLingletsResponse struct {
 	Type     string                            `json:"type"`
-	On       []string                          `json:"on"`
+	On       string                            `json:"on"`
+	Linglets []string                          `json:"linglets"`
 	Common   []NameValuePair                   `json:"common"`
 	Distinct []CompareLingletsResponseProperty `json:"distinct"`
 }
