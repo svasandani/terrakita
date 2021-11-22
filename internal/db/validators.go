@@ -62,7 +62,7 @@ func validateCompareLingsRequest(clr CompareLingsRequest) error {
 	}
 
 	log.Printf("Malformed request: %+v", clr)
-	return fmt.Errorf("Malformed filter request!")
+	return fmt.Errorf("Malformed compare request!")
 }
 
 func validateCompareLingletsRequest(cllr CompareLingletsRequest) error {
@@ -74,5 +74,5 @@ func validateCompareLingletsRequest(cllr CompareLingletsRequest) error {
 	}
 
 	log.Printf("Malformed request: %+v", cllr)
-	return fmt.Errorf("Malformed filter request!")
+	return fmt.Errorf("Malformed compare request!")
 }
