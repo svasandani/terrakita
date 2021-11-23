@@ -76,3 +76,27 @@ func validateCompareLingletsRequest(cllr CompareLingletsRequest) error {
 	log.Printf("Malformed request: %+v", cllr)
 	return fmt.Errorf("Malformed compare request!")
 }
+
+func validateCrossLingPropertiesRequest(clpr CrossLingPropertiesRequest) error {
+	hasGroup := clpr.Group != 0
+	hasLingProperties := len(clpr.LingProperties) != 0
+
+	if hasGroup && hasLingProperties {
+		return nil
+	}
+
+	log.Printf("Malformed request: %+v", clpr)
+	return fmt.Errorf("Malformed cross request!")
+}
+
+func validateCrossLingletPropertiesRequest(cllpr CrossLingletPropertiesRequest) error {
+	hasGroup := cllpr.Group != 0
+	hasLingletProperties := len(cllpr.LingletProperties) != 0
+
+	if hasGroup && hasLingletProperties {
+		return nil
+	}
+
+	log.Printf("Malformed request: %+v", cllpr)
+	return fmt.Errorf("Malformed cross request!")
+}
