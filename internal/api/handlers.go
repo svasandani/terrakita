@@ -266,6 +266,92 @@ func CompareLingletsHandler(w http.ResponseWriter, r *http.Request) {
 	writeResponse(w, js)
 }
 
+func CrossLingPropertiesHandler(w http.ResponseWriter, r *http.Request) {
+	var c db.CrossLingPropertiesRequest
+	var js []byte
+	var er error
+
+	err := json.NewDecoder(r.Body).Decode(&c)
+	if err != nil {
+		js, er = errorResponse(err, http.StatusBadRequest)
+		if er != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writeResponse(w, js)
+		return
+	}
+
+	benchmark.Start("CrossLingProperties")
+	cr, err := db.CrossLingProperties(c)
+	benchmark.Stop("CrossLingProperties")
+	if err != nil {
+		js, er = errorResponse(err, http.StatusInternalServerError)
+		if er != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writeResponse(w, js)
+		return
+	}
+
+	js, err = json.Marshal(cr)
+	if err != nil {
+		js, er = errorResponse(err, http.StatusInternalServerError)
+		if er != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writeResponse(w, js)
+		return
+	}
+
+	writeResponse(w, js)
+}
+
+func CrossLingletPropertiesHandler(w http.ResponseWriter, r *http.Request) {
+	var c db.CrossLingletPropertiesRequest
+	var js []byte
+	var er error
+
+	err := json.NewDecoder(r.Body).Decode(&c)
+	if err != nil {
+		js, er = errorResponse(err, http.StatusBadRequest)
+		if er != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writeResponse(w, js)
+		return
+	}
+
+	benchmark.Start("CrossLingletProperties")
+	cr, err := db.CrossLingletProperties(c)
+	benchmark.Stop("CrossLingletProperties")
+	if err != nil {
+		js, er = errorResponse(err, http.StatusInternalServerError)
+		if er != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writeResponse(w, js)
+		return
+	}
+
+	js, err = json.Marshal(cr)
+	if err != nil {
+		js, er = errorResponse(err, http.StatusInternalServerError)
+		if er != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writeResponse(w, js)
+		return
+	}
+
+	writeResponse(w, js)
+}
+
 func writeResponse(w http.ResponseWriter, js []byte) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
