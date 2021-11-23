@@ -161,6 +161,46 @@ type CompareLingletsResponseProperty struct {
 	LingletValuePairs []NameValuePair `json:"linglet_value_pairs"`
 }
 
+/*=== Cross ===*/
+
+// Cross Ling Properties
+
+type CrossLingPropertiesRequest struct {
+	Group          int   `json:"group"`
+	LingProperties []int `json:"ling_properties"`
+}
+
+type CrossLingPropertiesResponse struct {
+	Type                 string                                            `json:"type"`
+	On                   string                                            `json:"on"`
+	LingProperties       []string                                          `json:"ling_properties"`
+	PropertyCombinations []CrossLingPropertiesResponsePropertyCombinations `json:"property_combinations"`
+}
+
+type CrossLingPropertiesResponsePropertyCombinations struct {
+	PropertyValuePairs []NameValuePair `json:"property_value_pairs"`
+	Lings              []string        `json:"lings"`
+}
+
+// Cross Linglet Properties
+
+type CrossLingletPropertiesRequest struct {
+	Group             int   `json:"group"`
+	LingletProperties []int `json:"linglet_properties"`
+}
+
+type CrossLingletPropertiesResponse struct {
+	Type                 string                                               `json:"type"`
+	On                   string                                               `json:"on"`
+	LingletProperties    []string                                             `json:"linglet_properties"`
+	PropertyCombinations []CrossLingletPropertiesResponsePropertyCombinations `json:"property_combinations"`
+}
+
+type CrossLingletPropertiesResponsePropertyCombinations struct {
+	PropertyValuePairs []NameValuePair `json:"property_value_pairs"`
+	Linglets           []string        `json:"linglets"`
+}
+
 /******** Database Models ********/
 
 type Ling struct {
