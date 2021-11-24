@@ -18,7 +18,8 @@ func CompareLings(clr CompareLingsRequest) (CompareLingsResponse, error) {
 	nMap := make(map[string]string)          // property names
 	cMap := make(map[string]int)             // common property counts
 	dMap := make(map[string][]NameValuePair) // data values
-	lings := make([]string, len(clr.Lings))
+	lMap := make(map[string]bool)
+	lings := make([]string, 0)
 
 	// pass group then lings into query args
 	qargs := make([]interface{}, len(clr.Lings)+1)
@@ -27,8 +28,8 @@ func CompareLings(clr CompareLingsRequest) (CompareLingsResponse, error) {
 		qargs[i+1] = id
 	}
 
-	// SELECT lings
-	stmt := `SELECT id, name FROM lings WHERE group_id = ? AND depth = 0 AND id IN (?` + strings.Repeat(",?", len(clr.Lings)-1) + `)`
+	// SELECT lings and properties
+	stmt := `SELECT lings.id, lings.name, properties.id, properties.name, lings_properties.value FROM lings INNER JOIN lings_properties ON lings.id=lings_properties.ling_id INNER JOIN properties ON lings_properties.property_id=properties.id WHERE lings.group_id = ? AND lings.depth = 0 AND lings.id IN (?` + strings.Repeat(",?", len(clr.Lings)-1) + `)`
 	ls, err := db.Query(stmt, qargs...)
 	if err != nil {
 		log.Print("Error preparing database request!")
@@ -36,76 +37,55 @@ func CompareLings(clr CompareLingsRequest) (CompareLingsResponse, error) {
 	}
 	defer ls.Close()
 
-	i := 0
-
 	for ls.Next() {
 		var l Ling
+		var nv NameValuePair
 
-		err = ls.Scan(&l.Id, &l.Name)
+		err = ls.Scan(&l.Id, &l.Name, &nv.Id, &nv.Name, &nv.Value)
 		if err != nil {
 			log.Print("Error executing database request!")
 			return CompareLingsResponse{}, err
 		}
 
-		lings[i] = l.Name
-
-		// build statement dynamically
-		stmt = "SELECT properties.id, properties.name, lings_properties.value FROM lings_properties INNER JOIN properties ON lings_properties.property_id = properties.id WHERE lings_properties.group_id = ? AND ling_id = ?"
-
-		// SELECT properties
-		ps, err := db.Query(stmt, clr.Group, l.Id)
-		if err != nil {
-			log.Print("Error preparing database request!")
-			return CompareLingsResponse{}, err
+		if _, ok := lMap[l.Id]; !ok {
+			lings = append(lings, l.Name)
+			lMap[l.Id] = true
 		}
-		defer ps.Close()
 
-		for ps.Next() {
-			var nv NameValuePair
+		if d, ok := dMap[nv.Id]; ok {
+			// we've seen this property before
+			dMap[nv.Id] = append(d, NameValuePair{
+				Id:    l.Id,
+				Name:  l.Name,
+				Value: nv.Value,
+			})
 
-			err = ps.Scan(&nv.Id, &nv.Name, &nv.Value)
-			if err != nil {
-				log.Print("Error executing database request!")
-				return CompareLingsResponse{}, err
-			}
-
-			if d, ok := dMap[nv.Id]; ok {
-				// we've seen this property before
-				dMap[nv.Id] = append(d, NameValuePair{
-					Id:    l.Id,
-					Name:  l.Name,
-					Value: nv.Value,
-				})
-
-				if v, ok := vMap[nv.Id]; ok {
-					// property value is common so far
-					if v == nv.Value {
-						// property value is still common
-						cMap[nv.Id]++
-					} else {
-						// property is no longer common
-						delete(vMap, nv.Id)
-						delete(cMap, nv.Id)
-					}
+			if v, ok := vMap[nv.Id]; ok {
+				// property value is common so far
+				if v == nv.Value {
+					// property value is still common
+					cMap[nv.Id]++
+				} else {
+					// property is no longer common
+					delete(vMap, nv.Id)
+					delete(cMap, nv.Id)
 				}
-			} else {
-				// first time seeing this property
-				dMap[nv.Id] = []NameValuePair{{
-					Id:    l.Id,
-					Name:  l.Name,
-					Value: nv.Value,
-				}}
-				nMap[nv.Id] = nv.Name
-				vMap[nv.Id] = nv.Value
-				cMap[nv.Id] = 1
 			}
+		} else {
+			// first time seeing this property
+			dMap[nv.Id] = []NameValuePair{{
+				Id:    l.Id,
+				Name:  l.Name,
+				Value: nv.Value,
+			}}
+			nMap[nv.Id] = nv.Name
+			vMap[nv.Id] = nv.Value
+			cMap[nv.Id] = 1
 		}
-
-		i++
 	}
 
 	common := make([]NameValuePair, len(vMap))
-	i = 0
+	i := 0
 
 	for id, v := range vMap {
 		if cMap[id] != len(clr.Lings) {
@@ -158,17 +138,18 @@ func CompareLinglets(cllr CompareLingletsRequest) (CompareLingletsResponse, erro
 	nMap := make(map[string]string)          // property names
 	cMap := make(map[string]int)             // common property counts
 	dMap := make(map[string][]NameValuePair) // data values
-	linglets := make([]string, len(cllr.Linglets))
+	llMap := make(map[string]bool)
+	linglets := make([]string, 0)
 
-	// pass group then linglets into query args
+	// pass group then lings into query args
 	qargs := make([]interface{}, len(cllr.Linglets)+1)
 	qargs[0] = cllr.Group
 	for i, id := range cllr.Linglets {
 		qargs[i+1] = id
 	}
 
-	// SELECT linglets
-	stmt := `SELECT id, name FROM lings WHERE group_id = ? AND depth = 1 AND id IN (?` + strings.Repeat(",?", len(cllr.Linglets)-1) + `)`
+	// SELECT lings and properties
+	stmt := `SELECT lings.id, lings.name, properties.id, properties.name, lings_properties.value FROM lings INNER JOIN lings_properties ON lings.id=lings_properties.ling_id INNER JOIN properties ON lings_properties.property_id=properties.id WHERE lings.group_id = ? AND lings.depth = 1 AND lings.id IN (?` + strings.Repeat(",?", len(cllr.Linglets)-1) + `)`
 	ls, err := db.Query(stmt, qargs...)
 	if err != nil {
 		log.Print("Error preparing database request!")
@@ -176,76 +157,55 @@ func CompareLinglets(cllr CompareLingletsRequest) (CompareLingletsResponse, erro
 	}
 	defer ls.Close()
 
-	i := 0
-
 	for ls.Next() {
-		var l Ling
+		var ll Linglet
+		var nv NameValuePair
 
-		err = ls.Scan(&l.Id, &l.Name)
+		err = ls.Scan(&ll.Id, &ll.Name, &nv.Id, &nv.Name, &nv.Value)
 		if err != nil {
 			log.Print("Error executing database request!")
 			return CompareLingletsResponse{}, err
 		}
 
-		linglets[i] = l.Name
-
-		// build statement dynamically
-		stmt = "SELECT properties.id, properties.name, lings_properties.value FROM lings_properties INNER JOIN properties ON lings_properties.property_id = properties.id WHERE lings_properties.group_id = ? AND ling_id = ?"
-
-		// SELECT properties
-		ps, err := db.Query(stmt, cllr.Group, l.Id)
-		if err != nil {
-			log.Print("Error preparing database request!")
-			return CompareLingletsResponse{}, err
+		if _, ok := llMap[ll.Id]; !ok {
+			linglets = append(linglets, ll.Name)
+			llMap[ll.Id] = true
 		}
-		defer ps.Close()
 
-		for ps.Next() {
-			var nv NameValuePair
+		if d, ok := dMap[nv.Id]; ok {
+			// we've seen this property before
+			dMap[nv.Id] = append(d, NameValuePair{
+				Id:    ll.Id,
+				Name:  ll.Name,
+				Value: nv.Value,
+			})
 
-			err = ps.Scan(&nv.Id, &nv.Name, &nv.Value)
-			if err != nil {
-				log.Print("Error executing database request!")
-				return CompareLingletsResponse{}, err
-			}
-
-			if d, ok := dMap[nv.Id]; ok {
-				// we've seen this property before
-				dMap[nv.Id] = append(d, NameValuePair{
-					Id:    l.Id,
-					Name:  l.Name,
-					Value: nv.Value,
-				})
-
-				if v, ok := vMap[nv.Id]; ok {
-					// property value is common so far
-					if v == nv.Value {
-						// property value is still common
-						cMap[nv.Id]++
-					} else {
-						// property is no longer common
-						delete(vMap, nv.Id)
-						delete(cMap, nv.Id)
-					}
+			if v, ok := vMap[nv.Id]; ok {
+				// property value is common so far
+				if v == nv.Value {
+					// property value is still common
+					cMap[nv.Id]++
+				} else {
+					// property is no longer common
+					delete(vMap, nv.Id)
+					delete(cMap, nv.Id)
 				}
-			} else {
-				// first time seeing this property
-				dMap[nv.Id] = []NameValuePair{{
-					Id:    l.Id,
-					Name:  l.Name,
-					Value: nv.Value,
-				}}
-				nMap[nv.Id] = nv.Name
-				vMap[nv.Id] = nv.Value
-				cMap[nv.Id] = 1
 			}
+		} else {
+			// first time seeing this property
+			dMap[nv.Id] = []NameValuePair{{
+				Id:    ll.Id,
+				Name:  ll.Name,
+				Value: nv.Value,
+			}}
+			nMap[nv.Id] = nv.Name
+			vMap[nv.Id] = nv.Value
+			cMap[nv.Id] = 1
 		}
-
-		i++
 	}
 
 	common := make([]NameValuePair, len(vMap))
-	i = 0
+	i := 0
 
 	for id, v := range vMap {
 		if cMap[id] != len(cllr.Linglets) {
