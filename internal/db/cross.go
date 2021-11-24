@@ -142,7 +142,6 @@ func CrossLingletProperties(cllpr CrossLingletPropertiesRequest) (CrossLingletPr
 	ps, err := db.Query(stmt, qargs...)
 	if err != nil {
 		log.Print("Error preparing database request!")
-		log.Printf("%+v", cllpr)
 		return CrossLingletPropertiesResponse{}, err
 	}
 	defer ps.Close()
