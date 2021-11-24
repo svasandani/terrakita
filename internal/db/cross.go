@@ -124,7 +124,7 @@ func CrossLingletProperties(cllpr CrossLingletPropertiesRequest) (CrossLingletPr
 	properties := make([]string, len(cllpr.LingletProperties))
 
 	// pass group then ling properties into query args
-	qargs := make([]interface{}, len(cllpr.LingletProperties)+len(cllpr.LingletProperties)+1)
+	qargs := make([]interface{}, len(cllpr.LingletProperties)+len(cllpr.Linglets)+1)
 	qargs[0] = cllpr.Group
 	for i, id := range cllpr.LingletProperties {
 		qargs[i+1] = id
@@ -142,6 +142,7 @@ func CrossLingletProperties(cllpr CrossLingletPropertiesRequest) (CrossLingletPr
 	ps, err := db.Query(stmt, qargs...)
 	if err != nil {
 		log.Print("Error preparing database request!")
+		log.Printf("%+v", cllpr)
 		return CrossLingletPropertiesResponse{}, err
 	}
 	defer ps.Close()
