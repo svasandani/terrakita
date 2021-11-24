@@ -170,6 +170,7 @@ type CompareLingletsResponseProperty struct {
 type CrossLingPropertiesRequest struct {
 	Group          int   `json:"group"`
 	LingProperties []int `json:"ling_properties"`
+	Lings          []int `json:"lings"`
 }
 
 type CrossLingPropertiesResponse struct {
@@ -189,6 +190,7 @@ type CrossLingPropertiesResponsePropertyCombinations struct {
 type CrossLingletPropertiesRequest struct {
 	Group             int   `json:"group"`
 	LingletProperties []int `json:"linglet_properties"`
+	Linglets          []int `json:"linglets"`
 }
 
 type CrossLingletPropertiesResponse struct {

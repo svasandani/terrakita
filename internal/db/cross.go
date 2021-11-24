@@ -22,14 +22,21 @@ func CrossLingProperties(clpr CrossLingPropertiesRequest) (CrossLingPropertiesRe
 	properties := make([]string, len(clpr.LingProperties))
 
 	// pass group then ling properties into query args
-	qargs := make([]interface{}, len(clpr.LingProperties)+1)
+	qargs := make([]interface{}, len(clpr.LingProperties)+len(clpr.Lings)+1)
 	qargs[0] = clpr.Group
 	for i, id := range clpr.LingProperties {
 		qargs[i+1] = id
 	}
+	for i, id := range clpr.Lings {
+		qargs[i+len(clpr.LingProperties)+1] = id
+	}
 
 	// SELECT properties
 	stmt := `SELECT properties.id, properties.name, lings_properties.value, lings.name FROM lings_properties INNER JOIN properties ON lings_properties.property_id=properties.id INNER JOIN lings ON lings_properties.ling_id=lings.id WHERE lings.group_id = ? AND lings.depth = 0 AND properties.id IN (?` + strings.Repeat(",?", len(clpr.LingProperties)-1) + `)`
+	if len(clpr.Lings) != 0 {
+		stmt += ` AND lings.id IN (?` + strings.Repeat(",?", len(clpr.Lings)-1) + `)`
+	}
+
 	ps, err := db.Query(stmt, qargs...)
 	if err != nil {
 		log.Print("Error preparing database request!")
@@ -117,14 +124,21 @@ func CrossLingletProperties(cllpr CrossLingletPropertiesRequest) (CrossLingletPr
 	properties := make([]string, len(cllpr.LingletProperties))
 
 	// pass group then ling properties into query args
-	qargs := make([]interface{}, len(cllpr.LingletProperties)+1)
+	qargs := make([]interface{}, len(cllpr.LingletProperties)+len(cllpr.LingletProperties)+1)
 	qargs[0] = cllpr.Group
 	for i, id := range cllpr.LingletProperties {
 		qargs[i+1] = id
 	}
+	for i, id := range cllpr.Linglets {
+		qargs[i+len(cllpr.LingletProperties)+1] = id
+	}
 
 	// SELECT properties
 	stmt := `SELECT properties.id, properties.name, lings_properties.value, lings.name FROM lings_properties INNER JOIN properties ON lings_properties.property_id=properties.id INNER JOIN lings ON lings_properties.ling_id=lings.id WHERE lings.group_id = ? AND lings.depth = 1 AND properties.id IN (?` + strings.Repeat(",?", len(cllpr.LingletProperties)-1) + `)`
+	if len(cllpr.Linglets) != 0 {
+		stmt += ` AND lings.id IN (?` + strings.Repeat(",?", len(cllpr.Linglets)-1) + `)`
+	}
+
 	ps, err := db.Query(stmt, qargs...)
 	if err != nil {
 		log.Print("Error preparing database request!")
