@@ -56,8 +56,9 @@ func validateFilterLingletPropertiesRequest(fllpr FilterLingletPropertiesRequest
 func validateCompareLingsRequest(clr CompareLingsRequest) error {
 	hasGroup := clr.Group != 0
 	hasLings := len(clr.Lings) != 0
+	leqSix := len(clr.Lings) <= 6
 
-	if hasGroup && hasLings {
+	if hasGroup && hasLings && leqSix {
 		return nil
 	}
 
@@ -68,8 +69,9 @@ func validateCompareLingsRequest(clr CompareLingsRequest) error {
 func validateCompareLingletsRequest(cllr CompareLingletsRequest) error {
 	hasGroup := cllr.Group != 0
 	hasLinglets := len(cllr.Linglets) != 0
+	leqSix := len(cllr.Linglets) <= 6
 
-	if hasGroup && hasLinglets {
+	if hasGroup && hasLinglets && leqSix {
 		return nil
 	}
 
