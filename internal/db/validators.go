@@ -80,8 +80,9 @@ func validateCompareLingletsRequest(cllr CompareLingletsRequest) error {
 func validateCrossLingPropertiesRequest(clpr CrossLingPropertiesRequest) error {
 	hasGroup := clpr.Group != 0
 	hasLingProperties := len(clpr.LingProperties) != 0
+	leqSix := len(clpr.LingProperties) <= 6
 
-	if hasGroup && hasLingProperties {
+	if hasGroup && hasLingProperties && leqSix {
 		return nil
 	}
 
@@ -92,8 +93,9 @@ func validateCrossLingPropertiesRequest(clpr CrossLingPropertiesRequest) error {
 func validateCrossLingletPropertiesRequest(cllpr CrossLingletPropertiesRequest) error {
 	hasGroup := cllpr.Group != 0
 	hasLingletProperties := len(cllpr.LingletProperties) != 0
+	leqSix := len(cllpr.LingletProperties) <= 6
 
-	if hasGroup && hasLingletProperties {
+	if hasGroup && hasLingletProperties && leqSix {
 		return nil
 	}
 
