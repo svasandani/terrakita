@@ -22,14 +22,21 @@ func CompareLings(clr CompareLingsRequest) (CompareLingsResponse, error) {
 	lings := make([]string, 0)
 
 	// pass group then lings into query args
-	qargs := make([]interface{}, len(clr.Lings)+1)
+	qargs := make([]interface{}, len(clr.Lings)+len(clr.LingProperties)+1)
 	qargs[0] = clr.Group
 	for i, id := range clr.Lings {
 		qargs[i+1] = id
 	}
+	for i, id := range clr.LingProperties {
+		qargs[i+len(clr.Lings)+1] = id
+	}
 
 	// SELECT lings and properties
 	stmt := `SELECT lings.id, lings.name, properties.id, properties.name, lings_properties.value FROM lings INNER JOIN lings_properties ON lings.id=lings_properties.ling_id INNER JOIN properties ON lings_properties.property_id=properties.id WHERE lings.group_id = ? AND lings.depth = 0 AND lings.id IN (?` + strings.Repeat(",?", len(clr.Lings)-1) + `)`
+	if len(clr.LingProperties) != 0 {
+		stmt += ` AND properties.id IN (?` + strings.Repeat(",?", len(clr.LingProperties)-1) + `)`
+	}
+
 	ls, err := db.Query(stmt, qargs...)
 	if err != nil {
 		log.Print("Error preparing database request!")

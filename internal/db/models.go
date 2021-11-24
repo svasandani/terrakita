@@ -122,8 +122,9 @@ type FilterLingletPropertiesResponseProperty struct {
 // Compare Lings
 
 type CompareLingsRequest struct {
-	Group int   `json:"group"`
-	Lings []int `json:"lings"`
+	Group          int   `json:"group"`
+	Lings          []int `json:"lings"`
+	LingProperties []int `json:"ling_properties"`
 }
 
 type CompareLingsResponse struct {
@@ -143,8 +144,9 @@ type CompareLingsResponseProperty struct {
 // Compare Linglets
 
 type CompareLingletsRequest struct {
-	Group    int   `json:"group"`
-	Linglets []int `json:"linglets"`
+	Group             int   `json:"group"`
+	Linglets          []int `json:"linglets"`
+	LingletProperties []int `json:"linglet_properties"`
 }
 
 type CompareLingletsResponse struct {
