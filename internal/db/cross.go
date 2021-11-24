@@ -66,7 +66,7 @@ func CrossLingProperties(clpr CrossLingPropertiesRequest) (CrossLingPropertiesRe
 
 	j := 0
 
-	for l, n := range(lMap) {
+	for l, n := range lMap {
 		if len(n) == len(clpr.LingProperties) {
 			// ew
 			s := (*reflect.SliceHeader)(unsafe.Pointer(&n))
@@ -85,21 +85,21 @@ func CrossLingProperties(clpr CrossLingPropertiesRequest) (CrossLingPropertiesRe
 
 	k := 0
 
-	for n, ls := range(pMap) {
+	for n, ls := range pMap {
 		ns := make([]NameValuePair, len(clpr.LingProperties))
 		copy(ns, n[:len(clpr.LingProperties)])
 		pc[k] = CrossLingPropertiesResponsePropertyCombinations{
 			PropertyValuePairs: ns,
-			Lings: ls,
+			Lings:              ls,
 		}
 
 		k++
 	}
 
 	return CrossLingPropertiesResponse{
-		Type:     "cross",
-		On:       "ling_properties",
-		LingProperties:    properties,
+		Type:                 "cross",
+		On:                   "ling_properties",
+		LingProperties:       properties,
 		PropertyCombinations: pc,
 	}, nil
 }
@@ -161,7 +161,7 @@ func CrossLingletProperties(cllpr CrossLingletPropertiesRequest) (CrossLingletPr
 
 	j := 0
 
-	for l, n := range(lMap) {
+	for l, n := range lMap {
 		if len(n) == len(cllpr.LingletProperties) {
 			// ew
 			s := (*reflect.SliceHeader)(unsafe.Pointer(&n))
@@ -180,20 +180,20 @@ func CrossLingletProperties(cllpr CrossLingletPropertiesRequest) (CrossLingletPr
 
 	k := 0
 
-	for n, ls := range(pMap) {
+	for n, ls := range pMap {
 		ns := make([]NameValuePair, len(cllpr.LingletProperties))
 		copy(ns, n[:len(cllpr.LingletProperties)])
 		pc[k] = CrossLingletPropertiesResponsePropertyCombinations{
 			PropertyValuePairs: ns,
-			Linglets: ls,
+			Linglets:           ls,
 		}
 
 		k++
 	}
 
 	return CrossLingletPropertiesResponse{
-		Type:     "cross",
-		On:       "linglet_properties",
+		Type:                 "cross",
+		On:                   "linglet_properties",
 		LingletProperties:    properties,
 		PropertyCombinations: pc,
 	}, nil
