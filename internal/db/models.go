@@ -222,8 +222,8 @@ type SimilarityLingsResponse struct {
 }
 
 type SimilarityLingsResponsePair struct {
-	Lings            []string `json:"lings"`
-	CommonProperties int      `json:"common_properties"`
+	Lings                []string `json:"lings"`
+	CommonPropertyValues int      `json:"common_property_values"`
 }
 
 /******** Database Models ********/

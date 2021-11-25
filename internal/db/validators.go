@@ -104,3 +104,15 @@ func validateCrossLingletPropertiesRequest(cllpr CrossLingletPropertiesRequest) 
 	log.Printf("Malformed request: %+v", cllpr)
 	return fmt.Errorf("Malformed cross request!")
 }
+
+func validateSimilarityLingsRequest(slr SimilarityLingsRequest) error {
+	hasGroup := slr.Group != 0
+	hasLings := len(slr.Lings) != 0
+
+	if hasGroup && hasLings {
+		return nil
+	}
+
+	log.Printf("Malformed request: %+v", slr)
+	return fmt.Errorf("Malformed compare request!")
+}
