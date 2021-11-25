@@ -205,6 +205,27 @@ type CrossLingletPropertiesResponsePropertyCombinations struct {
 	Linglets           []string        `json:"linglets"`
 }
 
+/*=== Similarity ===*/
+
+// Similarity Lings
+
+type SimilarityLingsRequest struct {
+	Group int   `json:"group"`
+	Lings []int `json:"lings"`
+}
+
+type SimilarityLingsResponse struct {
+	Type  string                        `json:"type"`
+	On    string                        `json:"on"`
+	Lings []string                      `json:"lings"`
+	Pairs []SimilarityLingsResponsePair `json:"pairs"`
+}
+
+type SimilarityLingsResponsePair struct {
+	Lings            []string `json:"lings"`
+	CommonProperties int      `json:"common_properties"`
+}
+
 /******** Database Models ********/
 
 type Ling struct {

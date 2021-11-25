@@ -352,6 +352,49 @@ func CrossLingletPropertiesHandler(w http.ResponseWriter, r *http.Request) {
 	writeResponse(w, js)
 }
 
+func SimilarityLingsHandler(w http.ResponseWriter, r *http.Request) {
+	var s db.SimilarityLingsRequest
+	var js []byte
+	var er error
+
+	err := json.NewDecoder(r.Body).Decode(&s)
+	if err != nil {
+		js, er = errorResponse(err, http.StatusBadRequest)
+		if er != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writeResponse(w, js)
+		return
+	}
+
+	benchmark.Start("SimilarityLings")
+	sr, err := db.SimilarityLings(s)
+	benchmark.Stop("SimilarityLings")
+	if err != nil {
+		js, er = errorResponse(err, http.StatusInternalServerError)
+		if er != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writeResponse(w, js)
+		return
+	}
+
+	js, err = json.Marshal(sr)
+	if err != nil {
+		js, er = errorResponse(err, http.StatusInternalServerError)
+		if er != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writeResponse(w, js)
+		return
+	}
+
+	writeResponse(w, js)
+}
+
 func writeResponse(w http.ResponseWriter, js []byte) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
