@@ -226,6 +226,25 @@ type SimilarityLingsResponsePair struct {
 	CommonPropertyValues int      `json:"common_property_values"`
 }
 
+// Similarity Linglets
+
+type SimilarityLingletsRequest struct {
+	Group    int   `json:"group"`
+	Linglets []int `json:"linglets"`
+}
+
+type SimilarityLingletsResponse struct {
+	Type     string                           `json:"type"`
+	On       string                           `json:"on"`
+	Linglets []string                         `json:"linglets"`
+	Pairs    []SimilarityLingletsResponsePair `json:"pairs"`
+}
+
+type SimilarityLingletsResponsePair struct {
+	Linglets             []string `json:"linglets"`
+	CommonPropertyValues int      `json:"common_property_values"`
+}
+
 /******** Database Models ********/
 
 type Ling struct {

@@ -116,3 +116,15 @@ func validateSimilarityLingsRequest(slr SimilarityLingsRequest) error {
 	log.Printf("Malformed request: %+v", slr)
 	return fmt.Errorf("Malformed compare request!")
 }
+
+func validateSimilarityLingletsRequest(sllr SimilarityLingletsRequest) error {
+	hasGroup := sllr.Group != 0
+	hasLings := len(sllr.Linglets) != 0
+
+	if hasGroup && hasLings {
+		return nil
+	}
+
+	log.Printf("Malformed request: %+v", sllr)
+	return fmt.Errorf("Malformed compare request!")
+}
