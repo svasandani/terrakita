@@ -205,13 +205,29 @@ type CrossLingletPropertiesResponsePropertyCombinations struct {
 	Linglets           []string        `json:"linglets"`
 }
 
+/*=== Implication ===*/
+
+// All Implications
+
+type ImplicationRequest struct {
+	Group    int           `json:"group"`
+	Property NameValuePair `json:"property"`
+}
+
+type ImplicationResponse struct {
+	Type         string          `json:"type"`
+	Direction    string          `json:"direction"`
+	Implications []NameValuePair `json:"implications"`
+}
+
 /*=== Similarity ===*/
 
 // Similarity Lings
 
 type SimilarityLingsRequest struct {
-	Group int   `json:"group"`
-	Lings []int `json:"lings"`
+	Group     int   `json:"group"`
+	Lings     []int `json:"lings"`
+	Normalize bool  `json:"normalize"`
 }
 
 type SimilarityLingsResponse struct {
@@ -229,8 +245,9 @@ type SimilarityLingsResponsePair struct {
 // Similarity Linglets
 
 type SimilarityLingletsRequest struct {
-	Group    int   `json:"group"`
-	Linglets []int `json:"linglets"`
+	Group     int   `json:"group"`
+	Linglets  []int `json:"linglets"`
+	Normalize bool  `json:"normalize"`
 }
 
 type SimilarityLingletsResponse struct {

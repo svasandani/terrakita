@@ -352,6 +352,135 @@ func CrossLingletPropertiesHandler(w http.ResponseWriter, r *http.Request) {
 	writeResponse(w, js)
 }
 
+func ImplicationAntecedentHandler(w http.ResponseWriter, r *http.Request) {
+	var i db.ImplicationRequest
+	var js []byte
+	var er error
+
+	err := json.NewDecoder(r.Body).Decode(&i)
+	if err != nil {
+		js, er = errorResponse(err, http.StatusBadRequest)
+		if er != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writeResponse(w, js)
+		return
+	}
+
+	benchmark.Start("ImplicationAntecedent")
+	ir, err := db.ImplicationAntecedent(i)
+	benchmark.Stop("ImplicationAntecedent")
+	if err != nil {
+		js, er = errorResponse(err, http.StatusInternalServerError)
+		if er != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writeResponse(w, js)
+		return
+	}
+
+	js, err = json.Marshal(ir)
+	if err != nil {
+		js, er = errorResponse(err, http.StatusInternalServerError)
+		if er != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writeResponse(w, js)
+		return
+	}
+
+	writeResponse(w, js)
+}
+
+func ImplicationConsequentHandler(w http.ResponseWriter, r *http.Request) {
+	var i db.ImplicationRequest
+	var js []byte
+	var er error
+
+	err := json.NewDecoder(r.Body).Decode(&i)
+	if err != nil {
+		js, er = errorResponse(err, http.StatusBadRequest)
+		if er != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writeResponse(w, js)
+		return
+	}
+
+	benchmark.Start("ImplicationConsequent")
+	ir, err := db.ImplicationConsequent(i)
+	benchmark.Stop("ImplicationConsequent")
+	if err != nil {
+		js, er = errorResponse(err, http.StatusInternalServerError)
+		if er != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writeResponse(w, js)
+		return
+	}
+
+	js, err = json.Marshal(ir)
+	if err != nil {
+		js, er = errorResponse(err, http.StatusInternalServerError)
+		if er != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writeResponse(w, js)
+		return
+	}
+
+	writeResponse(w, js)
+}
+
+func ImplicationDoubleHandler(w http.ResponseWriter, r *http.Request) {
+	var i db.ImplicationRequest
+	var js []byte
+	var er error
+
+	err := json.NewDecoder(r.Body).Decode(&i)
+	if err != nil {
+		js, er = errorResponse(err, http.StatusBadRequest)
+		if er != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writeResponse(w, js)
+		return
+	}
+
+	benchmark.Start("ImplicationDouble")
+	ir, err := db.ImplicationDouble(i)
+	benchmark.Stop("ImplicationDouble")
+	if err != nil {
+		js, er = errorResponse(err, http.StatusInternalServerError)
+		if er != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writeResponse(w, js)
+		return
+	}
+
+	js, err = json.Marshal(ir)
+	if err != nil {
+		js, er = errorResponse(err, http.StatusInternalServerError)
+		if er != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writeResponse(w, js)
+		return
+	}
+
+	writeResponse(w, js)
+}
+
 func SimilarityLingsHandler(w http.ResponseWriter, r *http.Request) {
 	var s db.SimilarityLingsRequest
 	var js []byte

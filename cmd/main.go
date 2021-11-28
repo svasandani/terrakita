@@ -91,6 +91,10 @@ func createBackendServer(ev EnvVars) *http.Server {
 	mux.HandleFunc("/api/search/cross/ling_properties", api.CrossLingPropertiesHandler)
 	mux.HandleFunc("/api/search/cross/linglet_properties", api.CrossLingletPropertiesHandler)
 	
+	mux.HandleFunc("/api/search/implication/antecedent", api.ImplicationAntecedentHandler)
+	mux.HandleFunc("/api/search/implication/consequent", api.ImplicationConsequentHandler)
+	mux.HandleFunc("/api/search/implication/double", api.ImplicationDoubleHandler)
+	
 	mux.HandleFunc("/api/search/similarity/lings", api.SimilarityLingsHandler)
 	mux.HandleFunc("/api/search/similarity/linglets", api.SimilarityLingletsHandler)
 
