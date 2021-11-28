@@ -216,6 +216,7 @@ type ImplicationRequest struct {
 
 type ImplicationResponse struct {
 	Type         string          `json:"type"`
+	On           NameValuePair   `json:"on"`
 	Direction    string          `json:"direction"`
 	Implications []NameValuePair `json:"implications"`
 }

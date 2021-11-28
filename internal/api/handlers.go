@@ -438,7 +438,7 @@ func ImplicationConsequentHandler(w http.ResponseWriter, r *http.Request) {
 	writeResponse(w, js)
 }
 
-func ImplicationDoubleHandler(w http.ResponseWriter, r *http.Request) {
+func ImplicationBothHandler(w http.ResponseWriter, r *http.Request) {
 	var i db.ImplicationRequest
 	var js []byte
 	var er error
@@ -454,9 +454,9 @@ func ImplicationDoubleHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	benchmark.Start("ImplicationDouble")
-	ir, err := db.ImplicationDouble(i)
-	benchmark.Stop("ImplicationDouble")
+	benchmark.Start("ImplicationBoth")
+	ir, err := db.ImplicationBoth(i)
+	benchmark.Stop("ImplicationBoth")
 	if err != nil {
 		js, er = errorResponse(err, http.StatusInternalServerError)
 		if er != nil {
