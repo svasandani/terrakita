@@ -105,6 +105,18 @@ func validateCrossLingletPropertiesRequest(cllpr CrossLingletPropertiesRequest) 
 	return fmt.Errorf("Malformed cross request!")
 }
 
+func validateImplicationRequest(ir ImplicationRequest) error {
+	hasGroup := ir.Group != 0
+	hasPropertyValuePair := ir.Property != NameValuePair{}
+
+	if hasGroup && hasPropertyValuePair {
+		return nil
+	}
+
+	log.Printf("Malformed request: %+v", ir)
+	return fmt.Errorf("Malformed compare request!")
+}
+
 func validateSimilarityLingsRequest(slr SimilarityLingsRequest) error {
 	hasGroup := slr.Group != 0
 	hasLings := len(slr.Lings) != 0
