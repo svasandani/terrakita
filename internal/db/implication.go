@@ -69,7 +69,7 @@ func ImplicationAntecedent(ir ImplicationRequest) (ImplicationResponse, error) {
 
 	return ImplicationResponse{
 		Type:         "implication",
-		On:           ir.Property,
+		Property:     ir.Property,
 		Direction:    "antecedent",
 		Implications: is,
 	}, nil
@@ -146,7 +146,7 @@ func ImplicationConsequent(ir ImplicationRequest) (ImplicationResponse, error) {
 
 	return ImplicationResponse{
 		Type:         "implication",
-		On:           ir.Property,
+		Property:     ir.Property,
 		Direction:    "consequent",
 		Implications: is,
 	}, nil
@@ -225,7 +225,7 @@ func ImplicationBoth(ir ImplicationRequest) (ImplicationResponse, error) {
 
 	return ImplicationResponse{
 		Type:         "implication",
-		On:           ir.Property,
+		Property:     ir.Property,
 		Direction:    "both",
 		Implications: is,
 	}, nil
